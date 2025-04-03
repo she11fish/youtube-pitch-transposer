@@ -6,6 +6,8 @@ import { Loader2, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+import { youtubeUrlSchema } from "@/lib/schemas";
+import { z } from "zod";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -17,27 +19,38 @@ export default function Home() {
   const [pitch, setPitch] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!url) return;
+    try {
+      youtubeUrlSchema.parse(url);
+    } catch (error) {
+      alert((error as z.ZodError).errors[0].message);
+      return;
+    }
 
-    setIsLoading(true);
+    try {
+      const response = await fetch("/api/process", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url }),
+      });
 
-    // Simulate fetching video data
-    // In a real app, this would be a call to your backend
-    setTimeout(() => {
-      // Extract video ID from URL (simplified)
-      const videoId = url.includes("v=")
-        ? url.split("v=")[1].split("&")[0]
-        : url.split("/").pop();
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Something went wrong");
+      }
 
       setVideoData({
-        id: videoId || "",
+        id: data.videoId,
         title: "Sample Video Title",
       });
-      setIsLoading(false);
-    }, 2000);
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const togglePlay = () => {
