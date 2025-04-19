@@ -1,0 +1,40 @@
+FROM python:3.13.3-alpine as builder
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /api
+
+COPY ./requirements /api/requirements
+
+RUN pip install --no-cache-dir -r /api/requirements/prod.txt && \
+    rm -rf /root/.cache/pip
+
+COPY . .
+
+FROM python:3.13.3-alpine as final
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PATH=/root/.local/bin:/home/appuser/.local/bin:$PATH
+ENV ENV=production
+
+RUN apk add --no-cache \
+    sox \
+    ffmpeg \
+    && rm -rf /var/cache/apk/*
+
+WORKDIR /api
+
+COPY --from=builder /api /api
+COPY --from=builder /usr/local/lib/python3.13 /usr/local/lib/python3.13
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+RUN addgroup -g 1001 appgroup && \
+    adduser -u 1001 -G appgroup --disabled-password --gecos '' appuser
+    
+USER appuser
+
+EXPOSE 8000
+
+CMD ["gunicorn", "-c", "gunicorn.config.py", "app.main:app"]
