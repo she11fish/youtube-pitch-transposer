@@ -1,0 +1,36 @@
+services:
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./server/.env.dev
+    volumes:
+      - ./server:/app
+    networks:
+      - dev_network
+    tmpfs:
+      - /tmp/vidoes
+      - /tmp/audio
+  app:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    env_file:
+      - ./client/.env.dev
+
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+      - /app/.next
+
+    ports:
+      - "3000:3000"
+    networks:
+      - dev_network
+
+networks:
+  dev_network:
+    driver: bridge

@@ -1,0 +1,24 @@
+FROM node:23-alpine AS base
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+RUN npm i -g pnpm
+COPY package.json pnpm-lock.yaml ./
+RUN rm -rf node_modules
+
+RUN corepack enable pnpm && pnpm install --frozen-lockfile
+COPY . .
+
+
+FROM node:23-slim as release
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+WORKDIR /app
+RUN npm i -g pnpm
+
+COPY --from=base /app .
+
+EXPOSE 3000
+
+CMD ["pnpm", "dev"]

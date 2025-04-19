@@ -1,186 +1,148 @@
 "use client";
-import type React from "react";
 
-import { useState } from "react";
-import { Loader2, Play } from "lucide-react";
+import { redirect } from "next/navigation";
+import { Music, Zap, Clock, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
-import { youtubeUrlSchema } from "@/lib/schemas";
-import { z } from "zod";
 
 export default function Home() {
-  const [url, setUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [videoData, setVideoData] = useState<{
-    id: string;
-    title: string;
-  } | null>(null);
-  const [pitch, setPitch] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      youtubeUrlSchema.parse(url);
-    } catch (error) {
-      alert((error as z.ZodError).errors[0].message);
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/process", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong");
-      }
-
-      setVideoData({
-        id: data.videoId,
-        title: "Sample Video Title",
-      });
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying);
-  };
-
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-900 via-blue-900 to-black text-white">
-      <div className="w-full max-w-3xl mx-auto space-y-8">
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold">YouTube Pitch Transposer</h1>
-          <p className="text-gray-300">
-            Watch YouTube videos with adjustable pitch
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-900 via-blue-900 to-black text-white overflow-hidden relative">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-2/3 left-2/3 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl"></div>
+
+        {/* Musical notes decoration */}
+        <div className="absolute top-20 right-20 text-white/5 transform rotate-12">
+          <Music size={120} />
+        </div>
+        <div className="absolute bottom-20 left-20 text-white/5 transform -rotate-12">
+          <Music size={80} />
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="relative z-10 max-w-4xl w-full">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center mb-4">
+            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-full">
+              <Music className="h-10 w-10 text-purple-400" />
+            </div>
+          </div>
+          <h1 className="text-5xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
+            YouTube Pitch Transposer
+          </h1>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            Transform your YouTube videos with real-time pitch control. Perfect
+            for musicians, language learners, and content creators.
           </p>
         </div>
 
-        {!videoData && (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex gap-2">
-              <Input
-                type="text"
-                placeholder="Paste YouTube URL here..."
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-              />
-              <Button
-                className="bg-white text-black"
-                type="submit"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  "Load"
-                )}
-              </Button>
-            </div>
-          </form>
-        )}
-
-        {isLoading && (
-          <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="h-12 w-12 animate-spin text-white mb-4" />
-            <p>Processing your video...</p>
-          </div>
-        )}
-
-        {videoData && !isLoading && (
-          <div className="space-y-4">
-            <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                {/* This would be replaced with actual video player in a real implementation */}
-                <img
-                  src={`https://img.youtube.com/vi/${videoData.id}/maxresdefault.jpg`}
-                  alt="Video thumbnail"
-                  className="w-full h-full object-cover"
-                />
-
-                {!isPlaying && (
-                  <Button
-                    onClick={togglePlay}
-                    size="icon"
-                    className="absolute rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm w-16 h-16"
-                  >
-                    <Play className="h-8 w-8 fill-white" />
-                  </Button>
-                )}
+        {/* Mode selection cards */}
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          {/* Realtime mode card */}
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-purple-500/50 transition-all duration-300 group">
+            <div className="flex items-center mb-4">
+              <div className="bg-gradient-to-br from-green-400 to-green-600 p-3 rounded-lg mr-4">
+                <Zap className="h-6 w-6 text-white" />
               </div>
+              <h2 className="text-2xl font-semibold">Realtime Mode</h2>
+            </div>
 
-              {/* Video controls */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={togglePlay}
-                      className="text-white hover:bg-white/10"
-                    >
-                      {isPlaying ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-pause"
-                        >
-                          <rect width="4" height="16" x="6" y="4" />
-                          <rect width="4" height="16" x="14" y="4" />
-                        </svg>
-                      ) : (
-                        <Play className="h-5 w-5 fill-white" />
-                      )}
-                    </Button>
+            <p className="text-gray-300 mb-6">
+              Instantly adjust pitch while watching. Perfect for quick sessions
+              and immediate feedback.
+            </p>
 
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">Pitch:</span>
-                      <Slider
-                        value={[pitch]}
-                        min={-12}
-                        max={12}
-                        step={1}
-                        onValueChange={(value) => setPitch(value[0])}
-                        className="w-32"
-                      />
-                      <span className="text-sm w-8">
-                        {pitch > 0 ? `+${pitch}` : pitch}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="h-1 bg-white/20 rounded-full overflow-hidden">
-                    <div className="h-full bg-white w-1/3 rounded-full"></div>
-                  </div>
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center">
+                <div className="w-5 h-5 rounded-full bg-green-500 mr-3 flex items-center justify-center">
+                  <span className="text-xs">✓</span>
                 </div>
+                <span>Instant processing</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-5 h-5 rounded-full bg-green-500 mr-3 flex items-center justify-center">
+                  <span className="text-xs">✓</span>
+                </div>
+                <span>Live pitch adjustments</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-5 h-5 rounded-full bg-green-500 mr-3 flex items-center justify-center">
+                  <span className="text-xs">✓</span>
+                </div>
+                <span>Lower Wait Time</span>
               </div>
             </div>
 
-            <div>
-              <h2 className="text-xl font-semibold">{videoData.title}</h2>
-            </div>
+            <Button
+              onClick={() => redirect("/realtime")}
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-lg py-6 shadow-lg shadow-green-500/20 group-hover:shadow-green-500/30 transition-all duration-300"
+            >
+              <Zap className="mr-2 h-5 w-5" />
+              Start Realtime Mode
+            </Button>
           </div>
-        )}
+
+          {/* Preprocess mode card */}
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-purple-500/50 transition-all duration-300 group">
+            <div className="flex items-center mb-4">
+              <div className="bg-gradient-to-br from-purple-400 to-purple-600 p-3 rounded-lg mr-4">
+                <Wand2 className="h-6 w-6 text-white" />
+              </div>
+              <h2 className="text-2xl font-semibold">Preprocess Mode</h2>
+            </div>
+
+            <p className="text-gray-300 mb-6">
+              Higher quality pitch shifting with advanced processing for the
+              best audio experience.
+            </p>
+
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center">
+                <div className="w-5 h-5 rounded-full bg-purple-500 mr-3 flex items-center justify-center">
+                  <span className="text-xs">✓</span>
+                </div>
+                <span>Superior audio quality</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-5 h-5 rounded-full bg-purple-500 mr-3 flex items-center justify-center">
+                  <span className="text-xs">✓</span>
+                </div>
+                <span>Smoother playback</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-5 h-5 rounded-full bg-purple-500 mr-3 flex items-center justify-center">
+                  <span className="text-xs">✓</span>
+                </div>
+                <span>Advanced algorithms</span>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => redirect("/preprocess")}
+              className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold rounded-lg py-6 shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/30 transition-all duration-300"
+            >
+              <Clock className="mr-2 h-5 w-5" />
+              Start Preprocess Mode
+            </Button>
+          </div>
+        </div>
+
+        {/* Footer info */}
+        <div className="text-center text-gray-400 text-sm">
+          <p>
+            Choose the mode that best fits your needs. You can switch between
+            modes at any time.
+          </p>
+          <p className="mt-2">
+            For best results with music, use Preprocess mode. For quick
+            adjustments, use Realtime mode.
+          </p>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }

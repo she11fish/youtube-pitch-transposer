@@ -1,0 +1,104 @@
+services:
+  api:
+    image: youtubepitchtransposer-api:latest
+    build:
+      context: ./server
+      dockerfile: Dockerfile.prod
+    ports:
+      - "8000:8000"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - NET_BIND_SERVICE
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:mode=1777,size=100M
+    volumes:
+      - type: tmpfs
+        target: /tmp
+        tmpfs:
+          size: 104857600 # 100MB
+          mode: 1777
+      - type: tmpfs
+        target: /tmp/videos
+        tmpfs:
+          size: 104857600 # 100MB
+          mode: 1777
+      - type: tmpfs
+        target: /tmp/audio
+        tmpfs:
+          size: 104857600 # 100MB
+          mode: 1777
+
+    restart: on-failure:5
+    networks:
+      - app_network
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
+      resources:
+        limits:
+          memory: 256M
+          cpus: "5.0"
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
+    ulimits:
+      nofile: 1024
+      nproc: 256
+    environment:
+      APP_PORT: /run/secrets/app_port
+      API_URL: /run/secrets/app_url
+    secrets:
+      - app_port
+      - api_url
+  app:
+    image: youtubepitchtransposer-app:latest
+    build:
+      context: ./client
+      dockerfile: Dockerfile.prod
+    ports:
+      - "3000:3000"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - NET_BIND_SERVICE
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    networks:
+      - app_network
+    restart: on-failure:5
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.25"
+    ulimits:
+      nofile: 1024
+      nproc: 256
+    secrets:
+      - next_public_api_base_url
+
+networks:
+  app_network:
+    driver: overlay
+    attachable: true
+
+secrets:
+  app_port:
+    file: ./secrets/app_port.txt
+  api_url:
+    file: ./secrets/api_url.txt
+  next_public_api_base_url:
+    file: ./secrets/next_public_api_base_url.txt
