@@ -68,33 +68,68 @@ If you run the application with docker, here's how to do it.
 
 ### Development
 
-```
+```bash
 docker compose -f docker-compose.dev.yml up
 ```
 
 ### Production
 
-Enable Docker Swarm Mode, add the secrets in secrets folder with text files containing the intended content. It should be in this form
+To deploy the application in production:
 
-```
-secrets:
-  app_port:
-    file: ./secrets/app_port.txt
-  api_url:
-    file: ./secrets/api_url.txt
-  next_public_api_base_url:
-    file: ./secrets/next_public_api_base_url.txt
-```
+1. **Enable Docker Swarm Mode**  
+   (if not already enabled)
 
-Build the image
-```
-docker compose -f docker-compose.prod.yml build
-```
+   ```bash
+   docker swarm init
+   ```
 
-Run it
-```
-docker stack deploy -c docker-compose.prod.yml prod 
-```
+2. **Set up secrets**  
+   Create a `secrets` folder containing the necessary secret files. Each secret should be a plain text file with the required value, organized like this:
+
+   ```
+   secrets/
+   ├── app_port.txt
+   ├── api_url.txt
+   └── next_public_api_base_url.txt
+   ```
+
+   Example `docker-compose.prod.yml` secret configuration:
+
+   ```yaml
+   secrets:
+     app_port:
+       file: ./secrets/app_port.txt
+     api_url:
+       file: ./secrets/api_url.txt
+     next_public_api_base_url:
+       file: ./secrets/next_public_api_base_url.txt
+   ```
+
+3. **Build the production image**
+
+   ```bash
+   docker compose -f docker-compose.prod.yml build
+   ```
+
+4. **Deploy the stack**
+
+   ```bash
+   docker stack deploy -c docker-compose.prod.yml prod
+   ```
+
+5. **Access the application**
+
+   To find the IP address of your Docker Swarm node, run:
+
+   ```bash
+   docker node inspect self --format '{{ .Status.Addr }}'
+   ```
+
+   Then open your browser and navigate to:
+
+   ```
+   http://<ip_address>:<port_number>
+   ```
 
 ## API Endpoints
 
