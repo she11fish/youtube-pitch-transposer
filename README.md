@@ -5,7 +5,7 @@ YouTube Pitch Transposer is a tool designed to adjust the pitch of audio in YouT
 ## Why?
 
 If you don't like installing extensions like me, I like to google a specific thing I want to do and just use it.
-However when googling up YouTube Pitch Transposer, can't find any online which is a bit disappointing.
+However, when googling up YouTube Pitch Transposer, I couldn't find any which is a bit disappointing.
 Therefore, I created this website to fulfill this purpose.
 
 ## Features
