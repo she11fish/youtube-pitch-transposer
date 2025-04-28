@@ -86,10 +86,14 @@ secrets:
     file: ./secrets/next_public_api_base_url.txt
 ```
 
-Then run
-
+Build the image
 ```
-docker compose -f docker-compose.prod.yml up
+docker compose -f docker-compose.prod.yml build
+```
+
+Run it
+```
+docker stack deploy -c docker-compose.prod.yml prod 
 ```
 
 ## API Endpoints
