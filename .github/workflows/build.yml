@@ -63,6 +63,10 @@ jobs:
       - name: Wait for 120 seconds
         run: sleep 120
 
-      - name: Check service logs for backend and frontend
+      - name: Check service logs for backend
         run: |
-          docker service logs prod_api && docker service logs prod_app
+          docker service logs prod_api
+
+      - name: Check service logs for frontend
+        run: |
+          docker service logs prod_app
