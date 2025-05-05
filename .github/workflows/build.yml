@@ -60,6 +60,9 @@ jobs:
         run: |
           docker stack deploy -c docker-compose.prod.yml prod
 
+      - name: Wait for 120 seconds
+        run: sleep 120
+
       - name: Check service logs for backend and frontend
         run: |
           docker service logs prod_api && docker service logs prod_app
