@@ -63,15 +63,6 @@ jobs:
       - name: Wait for 60 seconds
         run: sleep 60
 
-      - name: Check service logs for backend
-        run: |
-          echo "🔍 Checking logs for backend (prod_api)..."
-          docker service logs prod_api | tee /tmp/backend_logs.txt
-
-          if ! [ -s /tmp/backend_logs.txt ]; then
-            echo "❌ No logs found for backend (prod_api)"
-            exit 1
-          fi
 
       - name: Check service logs for frontend
         run: |
@@ -80,5 +71,15 @@ jobs:
 
           if ! [ -s /tmp/frontend_logs.txt ]; then
             echo "❌ No logs found for frontend (prod_app)"
+            exit 1
+          fi
+
+      - name: Check service logs for backend
+        run: |
+          echo "🔍 Checking logs for backend (prod_api)..."
+          docker service logs prod_api | tee /tmp/backend_logs.txt
+
+          if ! [ -s /tmp/backend_logs.txt ]; then
+            echo "❌ No logs found for backend (prod_api)"
             exit 1
           fi
