@@ -8,6 +8,12 @@ on:
     branches:
       - main
 
+env:
+  VAR_NAMES: NEXT_PUBLIC_API_BASE_URL APP_PORT API_URL
+  NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+  APP_PORT: ${{ secrets.APP_PORT }}
+  API_URL: ${{ secrets.API_URL }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -42,6 +48,13 @@ jobs:
       - name: Initialize Docker Swarm
         run: docker swarm init
 
-      - name: Run Docker Stack Deploy
+      - name: Write secrets to files
         run: |
-          docker stack deploy -c docker-compose.prod.yml prod
+          mkdir -p secrets
+          for key in $VAR_NAMES; do
+            value="${!key}"
+            echo "$value" > "secrets/${key,,}.txt"
+          done
+            - name: Run Docker Stack Deploy
+              run: |
+                docker stack deploy -c docker-compose.prod.yml prod
