@@ -32,6 +32,9 @@ jobs:
         with:
           version: latest
 
+      - name: Debug Logs
+        run: ls
+
       - name: Build Docker images with Docker Compose
         run: |
           docker compose -f docker-compose-prod.yml build
