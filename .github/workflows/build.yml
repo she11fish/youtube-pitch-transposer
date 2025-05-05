@@ -39,6 +39,9 @@ jobs:
         run: |
           docker compose -f docker-compose.prod.yml build
 
-      - name: Run Docker Compose
+      - name: Initialize Docker Swarm
+        run: docker swarm init
+
+      - name: Run Docker Stack Deploy
         run: |
-          docker compose -f docker-compose.prod.yml up -d
+          docker stack deploy -c docker-compose.prod.yml prod
