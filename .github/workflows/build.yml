@@ -55,6 +55,7 @@ jobs:
             value="${!key}"
             echo "$value" > "secrets/${key,,}.txt"
           done
-            - name: Run Docker Stack Deploy
-              run: |
-                docker stack deploy -c docker-compose.prod.yml prod
+          
+      - name: Run Docker Stack Deploy
+        run: |
+          docker stack deploy -c docker-compose.prod.yml prod
