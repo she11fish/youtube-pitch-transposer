@@ -60,24 +60,24 @@ jobs:
         run: |
           docker stack deploy -c docker-compose.prod.yml prod
 
-      - name: Wait for 120 seconds
-        run: sleep 120
+      - name: Wait for 180 seconds
+        run: sleep 180
 
       - name: Check service logs for backend
         run: |
           echo "🔍 Checking logs for backend (prod_api)..."
           docker service logs prod_api | tee /tmp/backend_logs.txt
-      
+
           if ! [ -s /tmp/backend_logs.txt ]; then
             echo "❌ No logs found for backend (prod_api)"
             exit 1
           fi
-        
+
       - name: Check service logs for frontend
         run: |
           echo "🔍 Checking logs for frontend (prod_app)..."
           docker service logs prod_app | tee /tmp/frontend_logs.txt
-      
+
           if ! [ -s /tmp/frontend_logs.txt ]; then
             echo "❌ No logs found for frontend (prod_app)"
             exit 1
