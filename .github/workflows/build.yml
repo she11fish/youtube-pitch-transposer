@@ -37,8 +37,8 @@ jobs:
 
       - name: Build Docker images with Docker Compose
         run: |
-          docker compose -f docker-compose-prod.yml build
+          docker compose -f docker-compose.prod.yml build
 
       - name: Run Docker Compose
         run: |
-          docker compose -f docker-compose-prod.yml up -d
+          docker compose -f docker-compose.prod.yml up -d
