@@ -52,9 +52,6 @@ services:
     ulimits:
       nofile: 1024
       nproc: 256
-    environment:
-      APP_PORT: /run/secrets/app_port
-      API_URL: /run/secrets/app_url
     secrets:
       - app_port
       - api_url
