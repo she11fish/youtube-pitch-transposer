@@ -6,32 +6,32 @@ services:
       dockerfile: Dockerfile.prod
     ports:
       - "8000:8000"
-    cap_drop:
-      - ALL
-    cap_add:
-      - CHOWN
-      - NET_BIND_SERVICE
-    security_opt:
-      - no-new-privileges:true
+    # cap_drop:
+    #   - ALL
+    # cap_add:
+    #   - CHOWN
+    #   - NET_BIND_SERVICE
+    # security_opt:
+    #   - no-new-privileges:true
     # read_only: true
-    tmpfs:
-      - /tmp:mode=1777,size=100M
-    volumes:
-      - type: tmpfs
-        target: /tmp
-        tmpfs:
-          size: 104857600 # 100MB
-          mode: 1777
-      - type: tmpfs
-        target: /tmp/videos
-        tmpfs:
-          size: 104857600 # 100MB
-          mode: 1777
-      - type: tmpfs
-        target: /tmp/audio
-        tmpfs:
-          size: 104857600 # 100MB
-          mode: 1777
+    # tmpfs:
+    #   - /tmp:mode=1777,size=100M
+    # volumes:
+    #   - type: tmpfs
+    #     target: /tmp
+    #     tmpfs:
+    #       size: 104857600 # 100MB
+    #       mode: 1777
+    #   - type: tmpfs
+    #     target: /tmp/videos
+    #     tmpfs:
+    #       size: 104857600 # 100MB
+    #       mode: 1777
+    #   - type: tmpfs
+    #     target: /tmp/audio
+    #     tmpfs:
+    #       size: 104857600 # 100MB
+    #       mode: 1777
 
     restart: on-failure:5
     networks:
