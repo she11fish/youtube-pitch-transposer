@@ -72,8 +72,9 @@ jobs:
 
       - name: Run Docker Stack Deploy
         run: |
+          docker stack deploy -c docker-compose.prod.yml prod
 
-      - name: Wait for 60 seconds
+      - name: Wait for 60 secondsf
         run: sleep 60
 
       - name: Logging Docker Services
