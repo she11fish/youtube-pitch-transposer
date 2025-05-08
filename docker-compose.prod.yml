@@ -1,6 +1,6 @@
 services:
   api:
-    image: youtubepitchtransposer-api:latest
+    image: ghcr.io/she11fish/youtubepitchtransposer-api:latest
     build:
       context: ./server
       dockerfile: Dockerfile.prod
@@ -60,7 +60,7 @@ services:
       - app_port
       - api_url
   app:
-    image: youtubepitchtransposer-app:latest
+    image: ghcr.io/she11fish/youtubepitchtransposer-app:latest
     build:
       context: ./client
       dockerfile: Dockerfile.prod
