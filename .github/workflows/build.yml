@@ -1,4 +1,4 @@
-name: Docker CI Pipeline
+name: Build Pipeline
 
 on:
   push:
@@ -41,49 +41,59 @@ jobs:
       - name: Debug Logs
         run: ls
 
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build Docker images with Docker Compose
         run: |
           docker compose -f docker-compose.prod.yml build
 
-      - name: Initialize Docker Swarm
-        run: docker swarm init
-
-      - name: Write secrets to files
+      - name: Push Docker images to GHCR
         run: |
-          mkdir -p secrets
-          for key in $VAR_NAMES; do
-            value="${!key}"
-            echo "$value" > "secrets/${key,,}.txt"
-          done
+          docker compose push
 
-      - name: Run Docker Stack Deploy
-        run: |
-          docker stack deploy -c docker-compose.prod.yml prod
+      # - name: Initialize Docker Swarm
+      #   run: docker swarm init
 
-      - name: Wait for 60 seconds
-        run: sleep 60
+      # - name: Write secrets to files
+      #   run: |
+      #     mkdir -p secrets
+      #     for key in $VAR_NAMES; do
+      #       value="${!key}"
+      #       echo "$value" > "secrets/${key,,}.txt"
+      #     done
 
-      - name: Logging Docker Services
-        run: |
-          echo "🧩 Listing Docker services..."
-          docker service ls
+      # - name: Run Docker Stack Deploy
+      #   run: |
 
-      - name: Check service logs for frontend
-        run: |
-          echo "🔍 Checking logs for frontend (prod_app)..."
-          docker service logs prod_app | tee /tmp/frontend_logs.txt
+      # - name: Wait for 60 seconds
+      #   run: sleep 60
 
-          if ! [ -s /tmp/frontend_logs.txt ]; then
-            echo "❌ No logs found for frontend (prod_app)"
-            exit 1
-          fi
+      # - name: Logging Docker Services
+      #   run: |
+      #     echo "🧩 Listing Docker services..."
+      #     docker service ls
 
-      - name: Check service logs for backend
-        run: |
-          echo "🔍 Checking logs for backend (prod_api)..."
-          docker service logs prod_api | tee /tmp/backend_logs.txt
+      # - name: Check service logs for frontend
+      #   run: |
+      #     echo "🔍 Checking logs for frontend (prod_app)..."
+      #     docker service logs prod_app | tee /tmp/frontend_logs.txt
 
-          if ! [ -s /tmp/backend_logs.txt ]; then
-            echo "❌ No logs found for backend (prod_api)"
-            exit 1
-          fi
+      #     if ! [ -s /tmp/frontend_logs.txt ]; then
+      #       echo "❌ No logs found for frontend (prod_app)"
+      #       exit 1
+      #     fi
+
+      # - name: Check service logs for backend
+      #   run: |
+      #     echo "🔍 Checking logs for backend (prod_api)..."
+      #     docker service logs prod_api | tee /tmp/backend_logs.txt
+
+      #     if ! [ -s /tmp/backend_logs.txt ]; then
+      #       echo "❌ No logs found for backend (prod_api)"
+      #       exit 1
+      #     fi
