@@ -54,7 +54,7 @@ jobs:
 
       - name: Push Docker images to GHCR
         run: |
-          docker compose push
+          docker compose -f docker-compose.prod.yml push
 
       # - name: Initialize Docker Swarm
       #   run: docker swarm init
