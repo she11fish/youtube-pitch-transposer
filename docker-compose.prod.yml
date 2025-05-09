@@ -20,6 +20,8 @@ services:
       - /tmp:mode=1777,size=100M
       - /tmp/videos:mode=1777,size=100M
       - /tmp/audio:mode=1777,size=100M
+      - /var/tmp:mode=1777,size=100M
+      - /usr/tmp:mode=1777,size=100M
     # volumes:
     #   - type: tmpfs
     #     target: /tmp
