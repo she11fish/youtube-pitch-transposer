@@ -24,6 +24,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
+      - name: SSH into runner (tmate session)
+        uses: mxschmitt/action-tmate@v3.22
+        with:
+          limit-access-to-actor: true
+        timeout-minutes: 30
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.10.0
@@ -91,16 +96,6 @@ jobs:
             echo "❌ No logs found for frontend (prod_app)"
             exit 1
           fi
-
-      - name: Remove existing SSH key if present
-        run: |
-            rm -f /home/runner/.ssh/id_rsa
-
-      - name: SSH into runner (tmate session)
-        uses: mxschmitt/action-tmate@v3.22
-        with:
-          limit-access-to-actor: true
-        timeout-minutes: 30
 
       - name: Check service logs for backend
         run: |
