@@ -64,10 +64,10 @@ jobs:
 
       - name: Write secrets to files
         run: |
-          mkdir -p /run/secrets
+          mkdir -p secrets
           for key in $VAR_NAMES; do
             value="${!key}"
-            echo "$value" > "/run/secrets/${key,,}.txt"
+            echo "$value" > "secrets/${key,,}.txt"
           done
 
       - name: Run Docker Stack Deploy
