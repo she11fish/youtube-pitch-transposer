@@ -94,11 +94,11 @@ jobs:
           echo "🔍 Checking logs for backend (prod_api)..."
           logs=$(docker service logs prod_api)
 
-          if [ -z "$logs" ]; then
+          if [ "$(echo "$logs" | wc -c)" -gt 1 ]; then
+            echo "$logs"
+          else
             echo "❌ No logs found for backend (prod_api)"
             exit 1
-          else
-            echo "$logs"
           fi
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3.4.0
