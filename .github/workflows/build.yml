@@ -91,7 +91,7 @@ jobs:
 
           failed=0
 
-          echo "$services" | while read name replicas; do
+          while read name replicas; do
             desired=$(echo "$replicas" | cut -d/ -f2)
             running=$(echo "$replicas" | cut -d/ -f1)
 
@@ -102,6 +102,7 @@ jobs:
               failed=1
             fi
           done
+          done <<< "$services"
 
           if [ "$failed" -eq 1 ]; then
             echo "❌ One or more services failed to reach desired state."
