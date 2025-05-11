@@ -71,17 +71,11 @@ jobs:
           echo "🧩 Listing Docker services..."
           docker service ls
 
-      # - name: Check service logs for frontend
-      #   run: |
-      #     echo "🔍 Checking logs for frontend (prod_app)..."
-      #     logs=$(docker service logs prod_app)
-
-      #     if [ -z "$logs" ]; then
-      #       echo "❌ No logs found for frontend (prod_app)"
-      #       exit 1
-      #     else
-      #       echo "$logs"
-      #     fi
+      - name: Check service logs for frontend
+        run: |
+          echo "🔍 Checking logs for frontend (prod_app)..."
+          logs=$(docker service logs prod_app)
+          echo "$logs"
 
       # - name: SSH into runner (tmate session)
       #   uses: mxschmitt/action-tmate@v3
@@ -89,17 +83,11 @@ jobs:
       #     limit-access-to-actor: true
       #   timeout-minutes: 30
 
-      # - name: Check service logs for backend
-      #   run: |
-      #     echo "🔍 Checking logs for backend (prod_api)..."
-      #     logs=$(docker service logs prod_api)
-
-      #     if [ "$(echo "$logs" | wc -c)" -gt 1 ]; then
-      #       echo "$logs"
-      #     else
-      #       echo "❌ No logs found for backend (prod_api)"
-      #       exit 1
-      #     fi
+      - name: Check service logs for backend
+        run: |
+          echo "🔍 Checking logs for backend (prod_api)..."
+          logs=$(docker service logs prod_api)
+          echo "$logs"
 
       - name: Check if all services are running
         run: |
@@ -127,6 +115,7 @@ jobs:
           else
             echo "✅ All services are running."
           fi
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3.4.0
         with:
