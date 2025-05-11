@@ -77,11 +77,11 @@ jobs:
           logs=$(docker service logs prod_app)
           echo "$logs"
 
-      # - name: SSH into runner (tmate session)
-      #   uses: mxschmitt/action-tmate@v3
-      #   with:
-      #     limit-access-to-actor: true
-      #   timeout-minutes: 30
+      - name: SSH into runner (tmate session)
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
+        timeout-minutes: 30
 
       - name: Check service logs for backend
         run: |
