@@ -20,22 +20,22 @@ services:
       - /tmp:mode=1777,size=100M
       - /tmp/videos:mode=1777,size=100M
       - /tmp/audio:mode=1777,size=100M
-    volumes:
-      - type: tmpfs
-        target: /tmp
-        tmpfs:
-          size: 104857600 # 100MB
-          mode: 1777
-      - type: tmpfs
-        target: /tmp/videos
-        tmpfs:
-          size: 104857600 # 100MB
-          mode: 1777
-      - type: tmpfs
-        target: /tmp/audio
-        tmpfs:
-          size: 104857600 # 100MB
-          mode: 1777
+    # volumes:
+    #   - type: tmpfs
+    #     target: /tmp
+    #     tmpfs:
+    #       size: 104857600 # 100MB
+    #       mode: 1777
+    #   - type: tmpfs
+    #     target: /tmp/videos
+    #     tmpfs:
+    #       size: 104857600 # 100MB
+    #       mode: 1777
+    #   - type: tmpfs
+    #     target: /tmp/audio
+    #     tmpfs:
+    #       size: 104857600 # 100MB
+    #       mode: 1777
 
     restart: on-failure:5
     networks:
