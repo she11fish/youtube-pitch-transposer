@@ -77,15 +77,14 @@ jobs:
           logs=$(docker service logs prod_app)
           echo "$logs"
 
-
-          - name: Check service logs for backend
-          run: |
+      - name: Check service logs for backend
+        run: |
           echo "🔍 Checking logs for backend (prod_api)..."
           logs=$(docker service logs prod_api)
           echo "$logs"
 
-          - name: Check if all services are running
-          run: |
+      - name: Check if all services are running
+        run: |
           echo "🔍 Checking if all services are running..."
 
           services=$(docker stack services prod --format '{{.Name}} {{.Replicas}}')
@@ -93,22 +92,22 @@ jobs:
           failed=0
 
           echo "$services" | while read name replicas; do
-          desired=$(echo "$replicas" | cut -d/ -f2)
-          running=$(echo "$replicas" | cut -d/ -f1)
+            desired=$(echo "$replicas" | cut -d/ -f2)
+            running=$(echo "$replicas" | cut -d/ -f1)
 
-          echo "🔧 Service: $name | Running: $running | Desired: $desired"
+            echo "🔧 Service: $name | Running: $running | Desired: $desired"
 
-          if [ "$running" != "$desired" ]; then
-          echo "❌ Service $name is not fully running ($running/$desired)"
-          failed=1
-          fi
+            if [ "$running" != "$desired" ]; then
+              echo "❌ Service $name is not fully running ($running/$desired)"
+              failed=1
+            fi
           done
 
           if [ "$failed" -eq 1 ]; then
-          echo "❌ One or more services failed to reach desired state."
-          exit 1
+            echo "❌ One or more services failed to reach desired state."
+            exit 1
           else
-          echo "✅ All services are running."
+            echo "✅ All services are running."
           fi
 
       - name: SSH into runner (tmate session)
