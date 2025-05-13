@@ -110,11 +110,12 @@ jobs:
             echo "✅ All services are running."
           fi
 
-      - name: SSH into runner (tmate session)
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
-        timeout-minutes: 30
+      # Uncomment for debugging
+      # - name: SSH into runner (tmate session)
+      #   uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     limit-access-to-actor: true
+      #   timeout-minutes: 30
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3.4.0
