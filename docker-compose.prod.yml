@@ -1,6 +1,6 @@
 services:
   api:
-    image: youtubepitchtransposer-api:latest
+    image: ghcr.io/she11fish/youtubepitchtransposer-api:latest
     build:
       context: ./server
       dockerfile: Dockerfile.prod
@@ -14,8 +14,6 @@ services:
     security_opt:
       - no-new-privileges:true
     read_only: true
-    tmpfs:
-      - /tmp:mode=1777,size=100M
     volumes:
       - type: tmpfs
         target: /tmp
@@ -43,7 +41,7 @@ services:
       resources:
         limits:
           memory: 256M
-          cpus: "5.0"
+          cpus: "4.0"
       restart_policy:
         condition: on-failure
         delay: 5s
@@ -52,14 +50,11 @@ services:
     ulimits:
       nofile: 1024
       nproc: 256
-    environment:
-      APP_PORT: /run/secrets/app_port
-      API_URL: /run/secrets/app_url
     secrets:
       - app_port
       - api_url
   app:
-    image: youtubepitchtransposer-app:latest
+    image: ghcr.io/she11fish/youtubepitchtransposer-app:latest
     build:
       context: ./client
       dockerfile: Dockerfile.prod
