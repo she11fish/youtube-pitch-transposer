@@ -42,4 +42,4 @@ typing_extensions==4.13.0
 uvicorn==0.34.0
 watchfiles==1.0.5
 websockets==15.0.1
-yt-dlp==2025.3.31
+yt-dlp==2025.5.22
