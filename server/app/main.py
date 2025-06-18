@@ -12,7 +12,7 @@ from app.api.model import (
     YouTubePitchShiftResponse,
     YouTubeURL,
 )
-from server.app.config import get_config
+from app.config import get_config
 import yt_dlp
 import logging
 from moviepy import VideoFileClip, AudioFileClip
