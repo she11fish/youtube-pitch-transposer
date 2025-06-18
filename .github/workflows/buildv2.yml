@@ -52,11 +52,11 @@ jobs:
         run: |
           docker compose -f docker-compose.prod.yml ps
 
-          if [[ $(docker compose -f docker-compose.prod.yml ps -q | xargs docker inspect -f '{{.State.Status}}' | wc -l) -lt 1 ]]; then
+          if [[ $(docker compose -f docker-compose.prod.yml ps -q | xargs docker inspect -f '{{.State.Status}}' | wc -l) -le 1 ]]; then
             echo "One or more containers failed to start." && exit 1
           fi
 
-          docker compose logs
+          docker compose -f docker-compose.prod.yml logs
 
       # Uncomment for debugging
       # - name: SSH into runner (tmate session)
