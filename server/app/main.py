@@ -20,7 +20,7 @@ from pathlib import Path
 
 app = FastAPI()
 
-origins: list[str] = [get_config().API_URL]
+origins: list[str] = [get_config().APP_URL]
 
 
 app.add_middleware(

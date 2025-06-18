@@ -8,6 +8,7 @@ class Config:
 
     API_PORT = "api_port"
     API_URL = "api_url"
+    APP_URL = "app_url"
 
 
 class DevelopmentConfig(Config):
@@ -20,8 +21,13 @@ class DevelopmentConfig(Config):
 
     @property
     def API_URL(self):
-        """Returns the application port."""
+        """Returns the api url."""
         return DevelopmentConfig._read_secret(Config.API_URL)
+
+    @property
+    def APP_URL(self):
+        """Returns the application url."""
+        return DevelopmentConfig._read_secret(Config.APP_URL)
 
     @staticmethod
     def _read_secret(secret_name, default=None):
@@ -39,8 +45,13 @@ class ProductionConfig(Config):
 
     @property
     def API_URL(self):
-        """Returns the application port."""
+        """Returns the api url."""
         return ProductionConfig._read_secret(Config.API_URL)
+
+    @property
+    def APP_URL(self):
+        """Returns the application url."""
+        return ProductionConfig._read_secret(Config.APP_URL)
 
     @staticmethod
     def _read_secret(secret_name, default=None):
