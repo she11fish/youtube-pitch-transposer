@@ -6,16 +6,22 @@ import os
 class Config:
     """Base configuration class."""
 
-    APP_PORT = "app_port"
+    API_PORT = "api_port"
+    API_URL = "api_url"
 
 
 class DevelopmentConfig(Config):
     """Development-specific configuration."""
 
     @property
-    def APP_PORT(self):
+    def API_PORT(self):
         """Returns the application port."""
-        return DevelopmentConfig._read_secret(Config.APP_PORT)
+        return DevelopmentConfig._read_secret(Config.API_PORT)
+
+    @property
+    def API_URL(self):
+        """Returns the application port."""
+        return DevelopmentConfig._read_secret(Config.API_URL)
 
     @staticmethod
     def _read_secret(secret_name, default=None):
@@ -27,9 +33,14 @@ class ProductionConfig(Config):
     """Production-specific configuration."""
 
     @property
-    def APP_PORT(self):
+    def API_PORT(self):
         """Returns the application port."""
-        return ProductionConfig._read_secret(Config.APP_PORT)
+        return ProductionConfig._read_secret(Config.API_PORT)
+
+    @property
+    def API_URL(self):
+        """Returns the application port."""
+        return ProductionConfig._read_secret(Config.API_URL)
 
     @staticmethod
     def _read_secret(secret_name, default=None):
