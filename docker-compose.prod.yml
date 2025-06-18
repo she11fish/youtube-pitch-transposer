@@ -60,8 +60,8 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile.prod
-      environment:
-        - NEXT_PUBLIC_API_BASE_URL
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL
     ports:
       - "3000:3000"
     cap_drop:
