@@ -41,9 +41,9 @@ jobs:
         with:
           version: latest
 
-      - name: Build and Run Docker images with Docker Compose
+      - name: Build Docker images with Docker Compose
         run: |
-          docker compose -f docker-compose.prod.yml up --build
+          docker compose -f docker-compose.prod.yml build
 
       # Uncomment for debugging
       # - name: SSH into runner (tmate session)
