@@ -4,8 +4,9 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile.prod
-    env_file:
-      - ./server/.env.prod
+    environment:
+      - APP_PORT
+      - API_URL
     ports:
       - "8000:8000"
     cap_drop:
@@ -35,7 +36,6 @@ services:
     tmpfs:
       - /tmp/vidoes
       - /tmp/audio
-
     restart: on-failure:5
     networks:
       - app_network
@@ -60,8 +60,8 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile.prod
-    env_file:
-      - ./client/.env.prod
+      environment:
+        - NEXT_PUBLIC_API_BASE_URL
     ports:
       - "3000:3000"
     cap_drop:
