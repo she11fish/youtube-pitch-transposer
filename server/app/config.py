@@ -51,5 +51,6 @@ def get_config():
     """Returns the appropriate configuration class based on the environment."""
     env = os.getenv("ENV", "development").lower()
     if env == "production":
-        return ProductionConfig()
+        # return ProductionConfig()
+        return DevelopmentConfig()
     return DevelopmentConfig()

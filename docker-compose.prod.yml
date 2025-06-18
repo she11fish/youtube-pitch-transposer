@@ -4,6 +4,8 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile.prod
+    env_file:
+      - ./server/.env.prod
     ports:
       - "8000:8000"
     cap_drop:
@@ -14,22 +16,25 @@ services:
     security_opt:
       - no-new-privileges:true
     read_only: true
-    volumes:
-      - type: tmpfs
-        target: /tmp
-        tmpfs:
-          size: 104857600 # 100MB
-          mode: 1777
-      - type: tmpfs
-        target: /tmp/videos
-        tmpfs:
-          size: 104857600 # 100MB
-          mode: 1777
-      - type: tmpfs
-        target: /tmp/audio
-        tmpfs:
-          size: 104857600 # 100MB
-          mode: 1777
+    # volumes:
+    #   - type: tmpfs
+    #     target: /tmp
+    #     tmpfs:
+    #       size: 104857600 # 100MB
+    #       mode: 1777
+    #   - type: tmpfs
+    #     target: /tmp/videos
+    #     tmpfs:
+    #       size: 104857600 # 100MB
+    #       mode: 1777
+    #   - type: tmpfs
+    #     target: /tmp/audio
+    #     tmpfs:
+    #       size: 104857600 # 100MB
+    #       mode: 1777
+    tmpfs:
+      - /tmp/vidoes
+      - /tmp/audio
 
     restart: on-failure:5
     networks:
@@ -50,14 +55,13 @@ services:
     ulimits:
       nofile: 1024
       nproc: 256
-    secrets:
-      - app_port
-      - api_url
   app:
     image: ghcr.io/she11fish/youtubepitchtransposer-app:latest
     build:
       context: ./client
       dockerfile: Dockerfile.prod
+    env_file:
+      - ./client/.env.prod
     ports:
       - "3000:3000"
     cap_drop:
@@ -82,18 +86,9 @@ services:
     ulimits:
       nofile: 1024
       nproc: 256
-    secrets:
-      - next_public_api_base_url
 
 networks:
   app_network:
-    driver: overlay
-    attachable: true
-
-secrets:
-  app_port:
-    file: ./secrets/app_port.txt
-  api_url:
-    file: ./secrets/api_url.txt
-  next_public_api_base_url:
-    file: ./secrets/next_public_api_base_url.txt
+    # driver: overlay
+    # attachable: true
+    driver: bridge

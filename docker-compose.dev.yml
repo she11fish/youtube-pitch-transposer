@@ -20,7 +20,6 @@ services:
       dockerfile: Dockerfile.dev
     env_file:
       - ./client/.env.dev
-
     volumes:
       - ./client:/app
       - /app/node_modules
