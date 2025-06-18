@@ -50,9 +50,9 @@ jobs:
 
       - name: Check container statuses and logs
         run: |
-          docker compose ps
+          docker compose -f docker-compose.prod.yml ps
 
-          if [[ $(docker compose ps -q | xargs docker inspect -f '{{.State.Status}}' | wc -l) -lt 1 ]]; then
+          if [[ $(docker compose -f docker-compose.prod.yml ps -q | xargs docker inspect -f '{{.State.Status}}' | wc -l) -lt 1 ]]; then
             echo "One or more containers failed to start." && exit 1
           fi
 
