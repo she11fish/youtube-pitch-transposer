@@ -7,6 +7,7 @@ services:
     environment:
       - API_PORT
       - API_URL
+      - APP_URL
     ports:
       - "8000:8000"
     cap_drop:
@@ -16,7 +17,7 @@ services:
       - NET_BIND_SERVICE
     security_opt:
       - no-new-privileges:true
-    read_only: true
+    # read_only: true
     # volumes:
     #   - type: tmpfs
     #     target: /tmp

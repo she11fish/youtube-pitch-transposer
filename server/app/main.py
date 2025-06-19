@@ -56,6 +56,7 @@ async def process_youtube_url(data: YouTubePitchShiftRequest):
         ydl_opts = {
             "outtmpl": output_file,
             "format": "best",
+            "geo_bypass": True,
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:

@@ -27,7 +27,7 @@ RUN apk add --no-cache \
 WORKDIR /api
 
 # https://github.com/benoitc/gunicorn/issues/2859
-VOLUME ["/tmp"]
+# VOLUME ["/tmp"]
 
 COPY --from=builder /api /api
 COPY --from=builder /usr/local/lib/python3.13 /usr/local/lib/python3.13
