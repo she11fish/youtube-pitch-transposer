@@ -5,18 +5,31 @@ from urllib import response
 from pydantic import ValidationError
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 from app.api.utils import get_title_from_url, iterfile, pitch_shift
 from app.api.model import (
     YouTubePitchShiftRequest,
     YouTubePitchShiftResponse,
     YouTubeURL,
 )
+from app.config import get_config
 import yt_dlp
 import logging
 from moviepy import VideoFileClip, AudioFileClip
 from pathlib import Path
 
 app = FastAPI()
+
+origins: list[str] = [get_config().APP_URL]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.post("/process", response_model=YouTubePitchShiftResponse)
@@ -43,6 +56,7 @@ async def process_youtube_url(data: YouTubePitchShiftRequest):
         ydl_opts = {
             "outtmpl": output_file,
             "format": "best",
+            "geo_bypass": True,
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:

@@ -2,7 +2,7 @@ import multiprocessing
 import os
 from app.config import get_config
 
-bind = f"0.0.0.0:{get_config().APP_PORT}"
+bind = f"0.0.0.0:{get_config().API_PORT}"
 
 workers = multiprocessing.cpu_count()
 

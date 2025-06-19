@@ -6,16 +6,28 @@ import os
 class Config:
     """Base configuration class."""
 
-    APP_PORT = "app_port"
+    API_PORT = "api_port"
+    API_URL = "api_url"
+    APP_URL = "app_url"
 
 
 class DevelopmentConfig(Config):
     """Development-specific configuration."""
 
     @property
-    def APP_PORT(self):
+    def API_PORT(self):
         """Returns the application port."""
-        return DevelopmentConfig._read_secret(Config.APP_PORT)
+        return DevelopmentConfig._read_secret(Config.API_PORT)
+
+    @property
+    def API_URL(self):
+        """Returns the api url."""
+        return DevelopmentConfig._read_secret(Config.API_URL)
+
+    @property
+    def APP_URL(self):
+        """Returns the application url."""
+        return DevelopmentConfig._read_secret(Config.APP_URL)
 
     @staticmethod
     def _read_secret(secret_name, default=None):
@@ -27,9 +39,19 @@ class ProductionConfig(Config):
     """Production-specific configuration."""
 
     @property
-    def APP_PORT(self):
+    def API_PORT(self):
         """Returns the application port."""
-        return ProductionConfig._read_secret(Config.APP_PORT)
+        return ProductionConfig._read_secret(Config.API_PORT)
+
+    @property
+    def API_URL(self):
+        """Returns the api url."""
+        return ProductionConfig._read_secret(Config.API_URL)
+
+    @property
+    def APP_URL(self):
+        """Returns the application url."""
+        return ProductionConfig._read_secret(Config.APP_URL)
 
     @staticmethod
     def _read_secret(secret_name, default=None):
@@ -51,5 +73,6 @@ def get_config():
     """Returns the appropriate configuration class based on the environment."""
     env = os.getenv("ENV", "development").lower()
     if env == "production":
-        return ProductionConfig()
+        # return ProductionConfig()
+        return DevelopmentConfig()
     return DevelopmentConfig()
